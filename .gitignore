@@ -44,5 +44,4 @@ bin/
 
 .idea
 .gradle
-allure-results
 build
