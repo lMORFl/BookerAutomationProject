@@ -1,18 +1,15 @@
 package tests;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import core.clients.APIClient;
-import core.models.Booking;
+import core.models.GetBookingById;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GetBookingTest {
+public class GetBookingByIdTest {
     private APIClient apiClient;
     private ObjectMapper objectMapper;
 
@@ -24,23 +21,24 @@ public class GetBookingTest {
     }
 
     @Test
-    public void testGetBooking() throws Exception {
+    public void testGetBookingById() throws Exception {
         // Выполняем запрос к эндпоинту /bookig через APIClient
-        Response response = apiClient.booking();
+        Response response = apiClient.bookingByID(5);
 
         // Проверям, что статус-код ответа равен 200
         assertThat(response.getStatusCode()).isEqualTo(200);
 
         // Десериализуем тело ответа в список объектов Booking
         String responseBody = response.getBody().asString();
-        List<Booking> bookings = objectMapper.readValue(responseBody, new TypeReference<List<Booking>>() {});
+        GetBookingById infoBooking = objectMapper.readValue(responseBody, GetBookingById.class);
 
-        // Проверяем, что тело ответа содержит объекты Booking
-        assertThat(bookings).isNotEmpty(); // Проверяем, что список не пуст
-
-        // Проверяем, что каждый объект Booking содержит валидное начение bookingid
-        for (Booking booking : bookings) {
-            assertThat(booking.getBookingid()).isGreaterThan(0); // bookingid должен быть больше чем 0
-        }
+        // Проверяем, что тело ответа не пустое
+        assertThat(infoBooking).isNotNull();
+        // Проверяем, что поля не пустые
+        assertThat(infoBooking.getFirstname()).isNotNull();
+        assertThat(infoBooking.getLastname()).isNotNull();
+        assertThat(infoBooking.getBookingdates()).isNotNull();
+        assertThat(infoBooking.getBookingdates().getCheckin()).isNotNull();
+        assertThat(infoBooking.getBookingdates().getCheckout()).isNotNull();
     }
 }
