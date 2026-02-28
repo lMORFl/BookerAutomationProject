@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GetBookingById {
+    private int infoBookingId;
     private String firstname;
     private String lastname;
     private int totalprice;
@@ -17,14 +18,24 @@ public class GetBookingById {
                            @JsonProperty("totalprice") int totalprice,
                            @JsonProperty("depositpaid") boolean depositpaid,
                            @JsonProperty("additionalneeds") String additionalneeds,
-                           @JsonProperty("bookingdates") Bookingdates bookingdates){
+                           @JsonProperty("bookingdates") Bookingdates bookingdates,
+                            @JsonProperty("infoBookingId") int infoBookingId) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.totalprice = totalprice;
         this.depositpaid = depositpaid;
         this.bookingdates = bookingdates;
         this.additionalneeds = additionalneeds;
+        this.infoBookingId = infoBookingId;
 
+    }
+
+    public int getInfoBookingId() {
+        return infoBookingId;
+    }
+
+    public void setInfoBookingId(int infoBookingId) {
+        this.infoBookingId = infoBookingId;
     }
 
     public String getFirstname() {
