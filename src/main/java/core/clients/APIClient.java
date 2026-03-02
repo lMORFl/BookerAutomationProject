@@ -1,6 +1,5 @@
 package core.clients;
 
-import core.models.GetBookingById;
 import core.settings.ApiEndpoints;
 import io.restassured.RestAssured;
 import io.restassured.filter.Filter;
@@ -126,6 +125,18 @@ public class APIClient {
                 .log().all()
                 .when()
                 .post(ApiEndpoints.BOOKING.getPath())
+                .then()
+                .log().all()
+                .statusCode(200)
+                .extract()
+                .response();
+    }
+    public Response updateById(int bookingID, String newBooking) {
+        return getRequestSpec()
+                .pathParam("id", bookingID)
+                .body(newBooking)
+                .when()
+                .put(ApiEndpoints.BOOKING.getPath() + "/{id}")
                 .then()
                 .log().all()
                 .statusCode(200)
