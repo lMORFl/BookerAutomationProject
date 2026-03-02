@@ -59,12 +59,12 @@ public class NewBookingTest {
 
         // здесь сравнение дат по отдельности и компиляция проходит
         assertEquals(
-                createdBooking.getBooking().getBookingdates().getCheckin(),
-                newBooking.getBookingdates().getCheckin()
+                createdBooking.getBooking().getBookingDates().getCheckin(),
+                newBooking.getBookingDates().getCheckin()
         );
         assertEquals(
-                createdBooking.getBooking().getBookingdates().getCheckout(),
-                newBooking.getBookingdates().getCheckout()
+                createdBooking.getBooking().getBookingDates().getCheckout(),
+                newBooking.getBookingDates().getCheckout()
         );
         assertEquals(createdBooking.getBooking().getAdditionalneeds(), newBooking.getAdditionalneeds());
     }

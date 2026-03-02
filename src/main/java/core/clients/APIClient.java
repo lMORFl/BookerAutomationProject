@@ -4,6 +4,7 @@ import core.settings.ApiEndpoints;
 import io.restassured.RestAssured;
 import io.restassured.filter.Filter;
 import io.restassured.filter.FilterContext;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.FilterableRequestSpecification;
 import io.restassured.specification.FilterableResponseSpecification;
@@ -137,6 +138,18 @@ public class APIClient {
                 .body(newBooking)
                 .when()
                 .put(ApiEndpoints.BOOKING.getPath() + "/{id}")
+                .then()
+                .log().all()
+                .statusCode(200)
+                .extract()
+                .response();
+    }
+    public Response updatePatchById(int bookingID, String newBooking) {
+        return getRequestSpec()
+                .pathParam("id", bookingID)
+                .body(newBooking)
+                .when()
+                .patch(ApiEndpoints.BOOKING.getPath() + "/{id}")
                 .then()
                 .log().all()
                 .statusCode(200)

@@ -9,7 +9,7 @@ public class GetBookingById {
     private String lastname;
     private int totalprice;
     private boolean depositpaid;
-    private Bookingdates bookingdates;
+    private BookingDates bookingDates;
     private String additionalneeds;
 
     @JsonCreator
@@ -18,16 +18,24 @@ public class GetBookingById {
                            @JsonProperty("totalprice") int totalprice,
                            @JsonProperty("depositpaid") boolean depositpaid,
                            @JsonProperty("additionalneeds") String additionalneeds,
-                           @JsonProperty("bookingdates") Bookingdates bookingdates,
+                           @JsonProperty("bookingdates") BookingDates bookingdates,
                             @JsonProperty("infoBookingId") int infoBookingId) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.totalprice = totalprice;
         this.depositpaid = depositpaid;
-        this.bookingdates = bookingdates;
+        this.bookingDates = bookingdates;
         this.additionalneeds = additionalneeds;
         this.infoBookingId = infoBookingId;
 
+    }
+
+    public BookingDates getBookingDates() {
+        return bookingDates;
+    }
+
+    public void setBookingDates(BookingDates bookingDates) {
+        this.bookingDates = bookingDates;
     }
 
     public int getInfoBookingId() {
@@ -70,13 +78,7 @@ public class GetBookingById {
         this.depositpaid = depositpaid;
     }
 
-    public Bookingdates getBookingdates() {
-        return bookingdates;
-    }
 
-    public void setBookingdates(Bookingdates bookingdates) {
-        this.bookingdates = bookingdates;
-    }
 
     public String getAdditionalneeds() {
         return additionalneeds;

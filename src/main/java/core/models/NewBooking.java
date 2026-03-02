@@ -1,23 +1,17 @@
 package core.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class NewBooking {
     private String firstname;
     private String lastname;
     private int totalprice;
     private boolean depositpaid;
-    private BookingDates bookingdates;
+    @JsonProperty("bookingdates") private BookingDates bookingDates;
     private String additionalneeds;
 
     public String getFirstname() {
         return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
     }
 
     public void setLastname(String lastname) {
@@ -40,12 +34,12 @@ public class NewBooking {
         this.depositpaid = depositpaid;
     }
 
-    public BookingDates getBookingdates() {
-        return bookingdates;
+    @JsonProperty("bookingdates") public BookingDates getBookingDates() {
+        return bookingDates;
     }
 
-    public void setBookingDates(BookingDates bookingdates) {
-        this.bookingdates = bookingdates;
+    @JsonProperty("bookingdates") public void setBookingDates(BookingDates bookingDates) {
+        this.bookingDates = bookingDates;
     }
 
     public String getAdditionalneeds() {
@@ -56,4 +50,11 @@ public class NewBooking {
         this.additionalneeds = additionalneeds;
     }
 
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
 }

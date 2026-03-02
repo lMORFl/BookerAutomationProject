@@ -19,7 +19,6 @@ public class CreatePutDelete {
     private ObjectMapper objectMapper;
     private NewBooking newBooking; //Храним созданное бронирование
     private CreatedBooking createdBooking; //Новый объект для создания бронирования
-    private NewBooking updatedBooking;
 
     @BeforeEach
     public void setup() throws JsonProcessingException {
@@ -50,8 +49,8 @@ public class CreatePutDelete {
         assertEquals(createdBooking.getBooking().getTotalprice(), newBooking.getTotalprice());
         assertEquals(createdBooking.getBooking().isDepositpaid(), newBooking.isDepositpaid());
         // здесь сравнение дат по отдельности и компиляция проходит
-        assertEquals(createdBooking.getBooking().getBookingdates().getCheckin(), newBooking.getBookingdates().getCheckin());
-        assertEquals(createdBooking.getBooking().getBookingdates().getCheckout(), newBooking.getBookingdates().getCheckout());
+        assertEquals(createdBooking.getBooking().getBookingDates().getCheckin(), newBooking.getBookingDates().getCheckin());
+        assertEquals(createdBooking.getBooking().getBookingDates().getCheckout(), newBooking.getBookingDates().getCheckout());
 
     }
     @Test
@@ -66,7 +65,7 @@ public class CreatePutDelete {
 
         String requestBody = objectMapper.writeValueAsString(updatedBooking);
 
-        // 3. ОТПРАВЛЯЕМ ID И ТЕЛО ЗАПРОСА
+        // отправляем id и тело запроса
         Response updatedResponse = apiClient.updateById(createdBooking.getBookingid(), requestBody);
         assertThat(updatedResponse.getStatusCode()).isEqualTo(200);
     }

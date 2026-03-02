@@ -3,6 +3,7 @@ package tests;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import core.clients.APIClient;
 import core.models.GetBookingById;
+import core.models.NewBooking;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,8 +38,8 @@ public class GetBookingByIdTest {
         // Проверяем, что поля не пустые
         assertThat(infoBooking.getFirstname()).isNotNull();
         assertThat(infoBooking.getLastname()).isNotNull();
-        assertThat(infoBooking.getBookingdates()).isNotNull();
-        assertThat(infoBooking.getBookingdates().getCheckin()).isNotNull();
-        assertThat(infoBooking.getBookingdates().getCheckout()).isNotNull();
+        assertThat(infoBooking.getBookingDates()).isNotNull();
+        assertThat(infoBooking.getBookingDates().getCheckin()).isNotNull();
+        assertThat(infoBooking.getBookingDates().getCheckout()).isNotNull();
     }
 }
