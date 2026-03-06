@@ -2,7 +2,12 @@ package core.clients;
 
 import core.settings.ApiEndpoints;
 import io.restassured.RestAssured;
+import io.restassured.filter.Filter;
+import io.restassured.filter.FilterContext;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import io.restassured.specification.FilterableRequestSpecification;
+import io.restassured.specification.FilterableResponseSpecification;
 import io.restassured.specification.RequestSpecification;
 
 import java.io.IOException;
@@ -12,6 +17,7 @@ import java.util.Properties;
 public class APIClient {
 
     private final String baseUrl;
+    private String token;
 
     public APIClient() {
 
@@ -37,11 +43,40 @@ public class APIClient {
     }
 
     // Настройка базовых параметров HTTP-запросов
-    private RequestSpecification getRequestSpec() {
+    public RequestSpecification getRequestSpec() {
         return RestAssured.given()
                 .baseUri(baseUrl)
                 .header("Content-type", "application/json")
-                .header("Accept", "application/json");
+                .header("Accept", "application/json")
+                .filter(addAutTokenFilter());
+    }
+
+
+    // Метод получения токена
+    public void createToken(String username, String password) {
+        // Тело запроса для получения токена
+        String requestBody = String.format("{\"username\": \"%s\",\"password\":\"%s\"}", username, password);
+        Response response = getRequestSpec()
+                .body(requestBody)
+                .when()
+                .post(ApiEndpoints.AUTH.getPath())
+                .then()
+                .statusCode(200)
+                .extract()
+                .response();
+
+        // Извлекаем токен из ответа
+        token = response.jsonPath().getString("token");
+    }
+
+    // Фильтр для добавления токена в заголовок Authorization
+    private Filter addAutTokenFilter() {
+        return (FilterableRequestSpecification requestSpec, FilterableResponseSpecification responseSpec, FilterContext ctx) -> {
+            if (token != null) {
+                requestSpec.header("Cookie", "token=" + token);
+        }
+            return ctx.next(requestSpec, responseSpec);
+        };
     }
 
     // GET запрос на эндпоинт /ping
@@ -57,6 +92,88 @@ public class APIClient {
     public Response booking() {
         return getRequestSpec()
                 .when()
+                .get(ApiEndpoints.BOOKING.getPath())
+                .then()
+                .statusCode(200)
+                .extract()
+                .response();
+    }
+
+    public Response bookingByID(int infoBookingId) {
+        return getRequestSpec()
+                .pathParam("id", infoBookingId)
+                .when()
+                .get(ApiEndpoints.BOOKING.getPath() + "/{id}")
+                .then()
+                .extract()
+                .response();
+    }
+
+    public Response deleteBooking(int bookingID) {
+        return getRequestSpec()
+                .pathParam("id", bookingID) // Указываем path parameter для ID
+                .when()
+                .delete(ApiEndpoints.BOOKING.getPath() + "/{id}") // Используем параметр пути в запросе
+                .then()
+                .log().all()
+                .statusCode(201)
+                .extract()
+                .response();
+    }
+    public Response createBooking(String newBooking) {
+        return getRequestSpec()
+                .body(newBooking)
+                .log().all()
+                .when()
+                .post(ApiEndpoints.BOOKING.getPath())
+                .then()
+                .log().all()
+                .statusCode(200)
+                .extract()
+                .response();
+    }
+    public Response updateById(int bookingID, String newBooking) {
+        return getRequestSpec()
+                .pathParam("id", bookingID)
+                .body(newBooking)
+                .when()
+                .put(ApiEndpoints.BOOKING.getPath() + "/{id}")
+                .then()
+                .log().all()
+                .statusCode(200)
+                .extract()
+                .response();
+    }
+    public Response updatePatchById(int bookingID, String newBooking) {
+        return getRequestSpec()
+                .pathParam("id", bookingID)
+                .body(newBooking)
+                .when()
+                .log().all()
+                .patch(ApiEndpoints.BOOKING.getPath() + "/{id}")
+                .then()
+                .log().all()
+                .statusCode(200)
+                .extract()
+                .response();
+    }
+    public Response bookingFilterFirstnameLastName(String firstName, String lastName) {
+        return getRequestSpec()
+                .queryParam("firstname", firstName)
+                .queryParam("lastname", lastName)
+                .when()
+                .log().all()
+                .get(ApiEndpoints.BOOKING.getPath())
+                .then()
+                .statusCode(200)
+                .extract()
+                .response();
+    }
+    public Response bookingFilterFirstname(String firstName) {
+        return getRequestSpec()
+                .queryParam("firstname", firstName)
+                .when()
+                .log().all()
                 .get(ApiEndpoints.BOOKING.getPath())
                 .then()
                 .statusCode(200)

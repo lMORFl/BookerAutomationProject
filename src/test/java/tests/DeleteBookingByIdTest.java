@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GetBookingTest {
+public class DeleteBookingByIdTest {
     private APIClient apiClient;
     private ObjectMapper objectMapper;
 
@@ -21,10 +21,11 @@ public class GetBookingTest {
     public void setup() {
         apiClient = new APIClient();
         objectMapper = new ObjectMapper();
+        apiClient.createToken("admin", "password123");
     }
 
     @Test
-    public void testGetBooking() throws Exception {
+    public void testDeleteBookingById() throws Exception {
         // Выполняем запрос к эндпоинту /bookig через APIClient
         Response response = apiClient.booking();
 
@@ -33,7 +34,8 @@ public class GetBookingTest {
 
         // Десериализуем тело ответа в список объектов Booking
         String responseBody = response.getBody().asString();
-        List<Booking> bookings = objectMapper.readValue(responseBody, new TypeReference<List<Booking>>() {});
+        List<Booking> bookings = objectMapper.readValue(responseBody, new TypeReference<List<Booking>>() {
+        });
 
         // Проверяем, что тело ответа содержит объекты Booking
         assertThat(bookings).isNotEmpty(); // Проверяем, что список не пуст
@@ -42,5 +44,16 @@ public class GetBookingTest {
         for (Booking booking : bookings) {
             assertThat(booking.getBookingid()).isGreaterThan(0); // bookingid должен быть больше чем 0
         }
+
+        // Берем пятый ID из списка
+        int fifthBookingId = bookings.get(4).getBookingid();
+
+        // Удаляем
+        Response deleteResponse = apiClient.deleteBooking(fifthBookingId);
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(201);
+
+        // Проверяем, что удалено
+        Response checkResponse = apiClient.bookingByID(fifthBookingId);
+        assertThat(checkResponse.getStatusCode()).isEqualTo(404);
     }
 }
