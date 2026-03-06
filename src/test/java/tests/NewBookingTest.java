@@ -45,7 +45,7 @@ public class NewBookingTest {
         // Проверяем статус -код 200
         assertThat(response.getStatusCode()).isEqualTo(200);
 
-        //Десерифлизуем тело ответа в объект Booking
+        //Десериализуем тело ответа в объект Booking
         String responseBody = response.asString();
         createdBooking = objectMapper.readValue(responseBody, CreatedBooking.class);
 

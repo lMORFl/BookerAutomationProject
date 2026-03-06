@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CreatePutDelete {
+public class CreatePatchDeleteTest {
     private APIClient apiClient;
     private ObjectMapper objectMapper;
     private NewBooking newBooking; //Храним созданное бронирование
@@ -54,24 +54,23 @@ public class CreatePutDelete {
 
     }
     @Test
-    public void testUpdateBooking() throws Exception {
-        NewBooking updatedBooking = new NewBooking();
-        updatedBooking.setFirstname("Edgar");
-        updatedBooking.setLastname("Po");
-        updatedBooking.setTotalprice(990);
-        updatedBooking.setDepositpaid(true);
-        updatedBooking.setAdditionalneeds("without food");
-        updatedBooking.setBookingDates(new BookingDates("1845-12-12", "1846-01-12"));
-
-        String requestBody = objectMapper.writeValueAsString(updatedBooking);
+    public void testPatchBooking() throws Exception {
+//        NewBooking updatedBooking = new NewBooking();
+//        updatedBooking.setFirstname("Edgar");
+//        updatedBooking.setLastname("Po");
+        newBooking.setFirstname("Edgar");
+        newBooking.setLastname("Po");
+        String requestBody = objectMapper.writeValueAsString(newBooking);
 
         // отправляем id и тело запроса
-        Response updatedResponse = apiClient.updateById(createdBooking.getBookingid(), requestBody);
+        Response updatedResponse = apiClient.updatePatchById(createdBooking.getBookingid(), requestBody);
         assertThat(updatedResponse.getStatusCode()).isEqualTo(200);
+
     }
     @AfterEach
     public void tearDown() {
         apiClient.deleteBooking(createdBooking.getBookingid());
+
 
         // Проверяем, что бронирование успешно удалено
         assertThat(apiClient.bookingByID(createdBooking.getBookingid()).getStatusCode()).isEqualTo(404);

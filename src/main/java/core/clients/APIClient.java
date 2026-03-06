@@ -43,7 +43,7 @@ public class APIClient {
     }
 
     // Настройка базовых параметров HTTP-запросов
-    private RequestSpecification getRequestSpec() {
+    public RequestSpecification getRequestSpec() {
         return RestAssured.given()
                 .baseUri(baseUrl)
                 .header("Content-type", "application/json")
@@ -149,9 +149,33 @@ public class APIClient {
                 .pathParam("id", bookingID)
                 .body(newBooking)
                 .when()
+                .log().all()
                 .patch(ApiEndpoints.BOOKING.getPath() + "/{id}")
                 .then()
                 .log().all()
+                .statusCode(200)
+                .extract()
+                .response();
+    }
+    public Response bookingFilterFirstnameLastName(String firstName, String lastName) {
+        return getRequestSpec()
+                .queryParam("firstname", firstName)
+                .queryParam("lastname", lastName)
+                .when()
+                .log().all()
+                .get(ApiEndpoints.BOOKING.getPath())
+                .then()
+                .statusCode(200)
+                .extract()
+                .response();
+    }
+    public Response bookingFilterFirstname(String firstName) {
+        return getRequestSpec()
+                .queryParam("firstname", firstName)
+                .when()
+                .log().all()
+                .get(ApiEndpoints.BOOKING.getPath())
+                .then()
                 .statusCode(200)
                 .extract()
                 .response();
