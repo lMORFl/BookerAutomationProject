@@ -36,7 +36,7 @@ public class GetBookingTest {
         List<Booking> bookings = objectMapper.readValue(responseBody, new TypeReference<List<Booking>>() {});
 
         // Проверяем, что тело ответа содержит объекты Booking
-        assertThat(bookings).isNotEmpty(); // Промеряем, что список не пуст
+        assertThat(bookings).isNotEmpty(); // Проверяем, что список не пуст
 
         // Проверяем, что каждый объект Booking содержит валидное начение bookingid
         for (Booking booking : bookings) {
